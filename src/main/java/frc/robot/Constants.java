@@ -19,6 +19,9 @@ public final class Constants {
   }
 
   public static class MotorConstants {
-    public static final String rio = "canivore";
+    public static final String CANbus = "canivore";
+
+    public static final int kShooterLeftMotor = 11;
+    public static final int kShooterRightMotor = 12;
   }
 }
