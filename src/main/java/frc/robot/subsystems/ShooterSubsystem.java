@@ -44,9 +44,8 @@ public class ShooterSubsystem extends SubsystemBase {
     mm.MotionMagicJerk = 4000; //Target jerk of 4000 rps/s/s (0.1 seconds)
 
     shooterLeftMotor.getConfigurator().apply(config);
-    shooterRightMotor.getConfigurator().apply(config);
     
-    //shooterRightMotor.setControl(new Follower(shooterLeftMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+    shooterRightMotor.setControl(new Follower(shooterLeftMotor.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 
   @Override
@@ -56,7 +55,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void motionMagicSetVelocity(){
     //set velocity to 8 rps, add 0.5 V to overcome gravity
-    shooterLeftMotor.setControl(m_motionMagic.withVelocity(8).withFeedForward(0.5));
+    shooterLeftMotor.setControl(m_motionMagic.withVelocity(velocitySetpoint).withFeedForward(0.5));
   }
 
   public double getLeftVelocity(){
@@ -79,6 +78,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void manualSpeed(double speed){
     shooterLeftMotor.set(speed);
-    shooterRightMotor.set(speed);
+    shooterRightMotor.set(-speed);
   }
 }

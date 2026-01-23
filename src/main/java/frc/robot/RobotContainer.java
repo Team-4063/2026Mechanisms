@@ -5,14 +5,18 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SpeedConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -56,9 +60,13 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    //Motion Magic Shooter
+    m_operatorController.x().whileTrue(new ShooterCommand(0, m_shooterSubsystem))
+      .onFalse(new InstantCommand(() -> m_shooterSubsystem.manualSpeed(0)));
+
+    //manual shooter
+    m_operatorController.a().whileTrue(new RunCommand(() -> m_shooterSubsystem.manualSpeed(SpeedConstants.kShooterSpeed), m_shooterSubsystem))
+      .onFalse(new InstantCommand(() -> m_shooterSubsystem.manualSpeed(0)));
   }
 
   /**
