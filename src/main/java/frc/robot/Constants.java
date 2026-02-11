@@ -29,5 +29,37 @@ public final class Constants {
 
     public static final int kShooterLeftMotor = 11;
     public static final int kShooterRightMotor = 12;
+    public static final int kTurretMotor = 13;
   }
+
+  public static class TurretConstants {
+    public static final double kTurretRatio = 10.0; //100T 10DP driven by 10T 10DP
+
+    //FIXME
+    public static final double Front = 0.0;
+    public static final double Back = 10.0;
+    public static final double Left = 15.0;
+    public static final double Right = 5.0;
+    public static final double AutoDepot = 17.0;
+    public static final double AutoOutpost = 13.0;
+
+    public static final double CruiseVelocity = 3.5; //1 rotations per second cruise
+    public static final double Acceleration = 8; //10 Take approx 0.5 seconds to reach max vel
+    public static final double Jerk = 100; //Take approximately 0.1 seconds to reach max accel
+
+    public static final double kP = 5;  //5 An error of 1 rotation results in kP V output
+    public static final double kI = 0.05; //0 No output for integrated error
+    public static final double kD = 0.15; //0.1 A velocity of 1 rps results in kD V output
+    public static final double kV = 0.25; //0.12 A velocity target of 1 rps results in kV V output
+    public static final double kS = 0.25; //0.25 Approximately kS V to get the mechanism moving, output to overcome static friction
+
+    public static final boolean StatorEnable = true;
+    public static final double StatorLimit = 60;
+
+    public static final boolean SupplyEnable = true;
+    public static final double SupplyLimit = 60;
+
+    public static final double desiredRotations = 10;
+  }
+
 }
