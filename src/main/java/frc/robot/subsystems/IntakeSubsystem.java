@@ -4,14 +4,30 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.MotorConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
+
+  private final TalonFX m_rollerMotor = new TalonFX(MotorConstants.kIntakeRollerMotor);
+
+  private final DutyCycleOut m_rollerRequest = new DutyCycleOut(0.0);
+
   public IntakeSubsystem() {}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void runRollers(double speed){
+    m_rollerRequest.Output = speed;
+    m_rollerRequest.EnableFOC = true;
+    m_rollerMotor.setControl(m_rollerRequest);
+  }
+
 }

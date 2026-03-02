@@ -17,6 +17,13 @@ public final class Constants {
   public static class SpeedConstants{
     public static final double kShooterSpeed = 0.5; //manual speed
     public static final double kTargetVelocity = 8; //target velocity for motion magic in rps
+    public static final double kMaxSpeed = 5500/60; //in rps (?)
+    //Intake
+    public static final double kRollerSpeed = 1.0;
+    public static final double kPivotSpeed = 0.25;
+    //Spindexer
+    public static final double kSpindexerSpeed = 0.85;
+    public static final double kTransitionSpeed = 0.9;
   }
   
   public static class OperatorConstants {
@@ -25,15 +32,24 @@ public final class Constants {
   }
 
   public static class MotorConstants {
-    public static final String CANbus = "canivore";
+    public static final String CANbus = "canivore"; //Only swerve on Canivore.  Rest on RoboRio.
 
-    public static final int kShooterLeftMotor = 11;
-    public static final int kShooterRightMotor = 12;
+    public static final int kShooterTopMotor = 11;
+    public static final int kShooterBottomMotor = 12;
     public static final int kTurretMotor = 13;
+    public static final int kTransitionMotor = 14;
+    public static final int kSpindexerMotor = 15;
+    public static final int kIntakePivotMotor = 16;
+    public static final int kIntakeRollerMotor = 17;
+  }
+
+  public static class PositionConstants {
+    public static final double kIntakeDown = 1; //FIXME
+    public static final double kIntakeUp = 0.0; //FIXME
   }
 
   public static class TurretConstants {
-    public static final double kTurretRatio = 10.0; //100T 10DP driven by 10T 10DP
+    public static final double kTurretRatio = 10.0; //100T driven by 10T //FIXME
 
     //FIXME
     public static final double Front = 0.0;

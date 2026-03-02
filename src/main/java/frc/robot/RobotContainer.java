@@ -5,13 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PositionConstants;
 import frc.robot.Constants.SpeedConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.PivotCommand;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PivotSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +36,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final SpindexerSubsystem m_spindexerSubsystem = new SpindexerSubsystem();
+  private final PivotSubsystem m_pivotSubsystem = new PivotSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -56,13 +60,31 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    /******************Driver Controller*************************/
+
+    //Intake Rollers In
+    m_driverController.rightTrigger().whileTrue(new RunCommand(() -> m_intakeSubsystem.runRollers(SpeedConstants.kRollerSpeed), m_intakeSubsystem))
+      .onFalse(new InstantCommand(() -> m_intakeSubsystem.runRollers(0)));
+    //Intake Rollers Out
+    m_driverController.leftTrigger().whileTrue(new RunCommand(() -> m_intakeSubsystem.runRollers(-SpeedConstants.kRollerSpeed), m_intakeSubsystem))
+      .onFalse(new InstantCommand(() -> m_intakeSubsystem.runRollers(0)));
+    //Intake Pivot Down
+    m_driverController.a().whileTrue(new PivotCommand(PositionConstants.kIntakeDown, m_pivotSubsystem))
+      .onFalse(new InstantCommand(() -> m_pivotSubsystem.manualPivot(0)));
+    //Intake Pivot Up
+    m_driverController.y().whileTrue(new PivotCommand(PositionConstants.kIntakeUp, m_pivotSubsystem))
+      .onFalse(new InstantCommand(() -> m_pivotSubsystem.manualPivot(0)));
+    
+    /*****************Operator Controller***********************/
 
     //Motion Magic Shooter
-    m_operatorController.x().whileTrue(new ShooterCommand(0, m_shooterSubsystem))
+    m_operatorController.x().whileTrue(new ShooterCommand(0, m_shooterSubsystem, m_spindexerSubsystem)) //FIXME Need limelight speed calculation
       .onFalse(new InstantCommand(() -> m_shooterSubsystem.manualSpeed(0)));
+
+    m_operatorController.y().whileTrue(new ShooterCommand(SpeedConstants.kMaxSpeed, m_shooterSubsystem, m_spindexerSubsystem))
+      .onFalse(new InstantCommand(() -> m_shooterSubsystem.manualSpeed(0)))
+      .onFalse(new InstantCommand(() -> m_spindexerSubsystem.stopFuel()));
 
     //manual shooter
     m_operatorController.a().whileTrue(new RunCommand(() -> m_shooterSubsystem.manualSpeed(SpeedConstants.kShooterSpeed), m_shooterSubsystem))
